@@ -29,6 +29,7 @@
 #define _SYS_EPOLL_H_
 
 #include <sys/cdefs.h>
+#include <asm/fcntl.h> /* For O_CLOEXEC. */
 
 __BEGIN_DECLS
 
@@ -50,8 +51,9 @@ __BEGIN_DECLS
 #define EPOLL_CTL_ADD    1
 #define EPOLL_CTL_DEL    2
 #define EPOLL_CTL_MOD    3
+#define EPOLL_CLOEXEC O_CLOEXEC
 
-typedef union epoll_data 
+typedef union epoll_data
 {
     void *ptr;
     int fd;
@@ -59,13 +61,14 @@ typedef union epoll_data
     unsigned long long u64;
 } epoll_data_t;
 
-struct epoll_event 
+struct epoll_event
 {
     unsigned int events;
     epoll_data_t data;
 };
 
 int epoll_create(int size);
+int epoll_create1(int flags);
 int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
 int epoll_wait(int epfd, struct epoll_event *events, int max, int timeout);
 
